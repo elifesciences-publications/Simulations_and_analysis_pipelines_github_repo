@@ -46,7 +46,11 @@ Fig. 3(C-D).
 
 To generate the heatmap m as a function of L and D slopes (Fig. 4 - figSup3)
 *********************************************************
-1. Run mSlope_LD.m. 
+1. Run mSlope_LD.m. This generates the heat map with the crosshair marking 
+the best estimates of l and d based on my measurements.
+2. The coordinates for crosshair marking l and d slope
+intervals are computed by experimental_L_and_D_funs.m and are printed out
+when that function is running. A copy of these values is saved in mSlope_LD.m.
 
 To run and analyze simulations using L and D functions
 ******************************
