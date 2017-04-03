@@ -14,8 +14,7 @@ OUTDIR = [INDIR '/figs/'];
 TOSAVE_ALL = 0; %save workspace variables and timestamped script?
 
 %% simulation and export settings
-TOEXP_TRAJ = 0;
-TOEXP_HEATMAP = 0;
+TOEXP_HEATMAP = 0; %save heatmap?
 
 %select log-space grid of X and R to sample
 preX = [-3:0.25:3];
@@ -135,8 +134,6 @@ for a=1:numel(aval)
     grid off;
     
     if TOEXP_HEATMAP == 1
-        OUTDIR = ['/Users/E/Documents/Advisers/Rust/Simulations/' ...
-            'geometric resetting/finite relaxation/figs/'];
         set(gcf,'units','inches','position',[0 0 2.25 2.25]); % [0 0 4 3.5]);
         export_fig([OUTDIR ...
             getDate('yyyy-mm-dd') '_HeatMap_' 'a' num2str(aval(a)) ...

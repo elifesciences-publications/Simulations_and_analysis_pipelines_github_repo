@@ -13,7 +13,7 @@ cd(INDIR);
 TODISP = 0; %display outputs?
 LO_PP = 0; % which DPs to mark (LO_PP = phase of earliest DP, etc.);
 HI_PP = 24; % HI_PP = last time to give DP
-TOEXP_DOUBLEFIG = 1; %save fig?
+TOEXP_DOUBLEFIG = 0; %save fig?
 
 %%
 DPDUR = 12;

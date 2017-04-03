@@ -26,9 +26,9 @@ STEPFUN_BOOT = ['../helper functions and shared files/'...
 %% pick which datasets you want to analyze
 %datasets generated from bootstrapped simulations based on...
 %... nonlinear L and D funs (
-NONLIN_BOOT = ['2017-04-01_18.06.06_NonLin_FAST_4.mat']; 
+NONLIN_BOOT = ['saved_data/2017-04-01_18.06.06_NonLin_FAST_4.mat']; 
 %... linearized versions of the same L and D funs
-LIN_BOOT = ['2017-04-01_18.06.07_Lin_FAST_4.mat'];
+LIN_BOOT = ['saved_data/2017-04-01_18.06.07_Lin_FAST_4.mat'];
 
 %use linear or nonlinear step funs?
 TOPLOT_LIN_NONLIN = 1; %[0=use nonlin step funs sims, 1=use linearized] 

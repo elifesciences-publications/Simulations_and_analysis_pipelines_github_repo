@@ -25,9 +25,6 @@ boot = [1:4];
 %load bootstrapped step funs
 % NOTE! must be in 2*pi units
 INDIR=['helper functions and shared files'];
-% INFILE='2017-03-17_stepFun_inKaiCPhase_19.20.23.mat';
-% INFILE='2017-03-30_mergedStepFuns_11.43.53.mat';
-% INFILE='2017-03-31_mergedStepFuns_21.04.38.mat';
 INFILE='2017-04-01_mergedStepFuns_11.35.34.mat';
 load(['../' INDIR '/' INFILE]);
 

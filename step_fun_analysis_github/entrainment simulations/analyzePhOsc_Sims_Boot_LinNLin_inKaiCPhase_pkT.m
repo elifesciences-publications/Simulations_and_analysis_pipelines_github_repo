@@ -18,8 +18,8 @@ cd(INDIR);
 toexp_VitroSilico = 1; %export figs?
 
 %% load simulation results
-SIMULATION_BOOT_NONLIN = load(['2017-04-01_16.55.00_NonLin_FAST_4.mat']); 
-SIMULATION_BOOT_LIN = load(['2017-04-01_16.55.07_Lin_FAST_4.mat']);
+SIMULATION_BOOT_NONLIN = load(['saved_data/2017-04-01_16.55.00_NonLin_FAST_4.mat']); 
+SIMULATION_BOOT_LIN = load(['saved_data/2017-04-01_16.55.07_Lin_FAST_4.mat']);
 
 TOLOAD_OLD_SIMULATION_ONE = 1; %plot data from first simulation? (1=yes)
 TOLOAD_OLD_SIMULATION_TWO = 1; %plot data from second simulation? (1=yes)

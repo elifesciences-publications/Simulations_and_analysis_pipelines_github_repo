@@ -1,7 +1,7 @@
 %2017-03-29, EL: generate Fig. 4-figSup3
 %dependencies: export_fig.m from FileExchange for figure export
 
-TOEXP = 1; %export figure? (1=yes)
+TOEXP = 0; %export figure? (1=yes)
 
 %% compute m = d*(1-L)/(l+d*(1-L)) as a heatmap
 Lrange = [0:0.02:1.0];

@@ -13,8 +13,7 @@ OUTDIR = [INDIR '/figs/'];
 TOSAVE_ALL = 1; %save workspace variables and script with timestamp?
 
 %% simulation and export settings
-TOEXP_TRAJ = 0;
-TOEXP_HEATMAP = 0;
+TOEXP_HEATMAP = 0; %export heatmap?
 
 preX = -3:0.25:3;
 preR = -3:0.25:3;
@@ -136,8 +135,6 @@ for eps=1:numel(epsval)
     grid off;
     
     if TOEXP_HEATMAP == 1
-        OUTDIR = ['/Users/E/Documents/Advisers/Rust/Simulations/' ...
-            'geometric resetting/varyingSpeed_Midway/figs/'];
         set(gcf,'units','inches','position',[0 0 2.25 2.25]);
         export_fig([OUTDIR ...
             getDate('yyyy-mm-dd') '_HeatMap_' 'eps' num2str(epsval(eps),'%2.2f') ...

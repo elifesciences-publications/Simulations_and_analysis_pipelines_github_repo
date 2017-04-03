@@ -5,7 +5,17 @@ This directory contains scripts and functions used to analyze data and perform s
 
 Below is a map describing where you can find scripts for specific figures/analyses. Each directory contains a readme.txt file that describes how the files are organized and which files perform which analyses.
 
-Note that a lot of the scripts rely on accessory files provided in dependencies_github/ folder. Please add those files to your MATLAB path before running any scripts. 
+-------------------------------------------------------------------------
+
+Usage Notes
+***********
+1. A lot of the scripts rely on accessory files provided in dependencies_github/ folder. Please add those files and subfolders to your MATLAB path before running any scripts. 
+
+2. A number of scripts contains variables that control whether or not a given function saves output, displays progress messages, makes plots or exports figures as PDF files. These variables have names such as TOPLOT, TOEXP, TODISP, TOSAVE, etc. Set their values to 1 to perform the relevant action (e.g., TOPLOT=1 turns plotting on).
+
+3. On some systems, figure export fails because of an error in export_fig.m*. If you get an error message, try turning off figure export in the relevant file (e.g., by setting TOEXP=1) and re-running the code. Generally, errors in figure export should not affect the rest of the functionalities: the code should run, save output results appropriately and generate figures (but not export them). You can manually save the figures by using Matlab's dialog boxes.
+
+*export_fig.m is a useful figure exporting package by Oliver Woodford, used and distributed according to the BSD license.
 
 -------------------------------------------------------------------------
 
