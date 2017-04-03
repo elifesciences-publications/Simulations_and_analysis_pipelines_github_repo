@@ -11,7 +11,7 @@ Usage Notes
 ***********
 1. A lot of the scripts rely on accessory files provided in dependencies_github/ folder. Please add those files and subfolders to your MATLAB path before running any scripts. 
 
-2. A number of scripts contains variables that control whether or not a given function saves output, displays progress messages, makes plots or exports figures as PDF files. These variables have names such as TOPLOT, TOEXP, TODISP, TOSAVE, etc. Set their values to 1 to perform the relevant action (e.g., TOPLOT=1 turns plotting on).
+2. A number of scripts contain variables that control whether or not a given function saves output, displays progress messages, makes plots or exports figures as PDF files. These variables have names such as TOPLOT, TOEXP, TODISP, TOSAVE, etc. Set their values to 1 to perform the relevant action (e.g., TOPLOT=1 turns plotting on).
 
 3. On some systems, figure export fails because of an error in export_fig.m*. If you get an error message, try turning off figure export in the relevant file (e.g., by setting TOEXP=1) and re-running the code. Generally, errors in figure export should not affect the rest of the functionalities: the code should run, save output results appropriately and generate figures (but not export them). You can manually save the figures by using Matlab's dialog boxes.
 
