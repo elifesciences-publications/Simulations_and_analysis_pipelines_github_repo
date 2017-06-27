@@ -12,7 +12,7 @@ Performs a global fit of entrainment datasets collected using the
 fluorescence polarization probe and overlays the resulting dayTime vs. day
 length curves on top of SDS-PAGE data and in vivo data (as in Fig. 2C).
 
-Figure 2 - figuSup 1
+Figure 2 - figSup 1
 ********************
 pkaic_vs_polarization_github/fit_PKaiC_Polarization_joint.m
 performs a global fit to the polarization and SDS-PAGE datasets in 
