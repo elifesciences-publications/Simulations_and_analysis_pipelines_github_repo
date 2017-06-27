@@ -32,9 +32,15 @@ bestFitNonParBoot.m to plot fits on top of raw data.
 2. Do this for every dataset from which you want to get L and D funs (i.e.,
 for every directory listed above).
 
+To plot example fits to normalized data (Fig. 3 - figSup1)
+*****************************
+1. Run bestFitNonParBoot.m with TOTEST=1. 
+2. This will call the testParSet_Resampled.m function, which will overlay 
+fits on top of normalized data. 
+
 To plot experimentally measured L and D functions (Fig. 3(C-D))
 *************************************************
-1. Open experimental_L_and_D_funs.m in merge_all_measured_step_funs.m.
+1. Open experimental_L_and_D_funs.m in merge_all_measured_step_funs/.
 2. Enter appropriate file names into the STEPUP_ONE_FILE, STEPDOWN_ONE_FILE
 and STEPUPDOWN_FILE fields and corresponding directories. Note that two
 directories contain a single step-up or step-down function measurement
@@ -44,8 +50,8 @@ step-down function. Please enter the file names accordingly.
 3. Run the file. This will generate the figures of L and D functions in
 Fig. 3(C-D).
 
-To generate the heatmap m as a function of L and D slopes (Fig. 4 - figSup3)
-*********************************************************
+To generate the heatmap of m as a function of slopes of L and D (Fig. 4 - figSup3)
+***************************************************************
 1. Run mSlope_LD.m. This generates the heat map with the crosshair marking 
 the best estimates of l and d based on my measurements.
 2. The coordinates for crosshair marking l and d slope

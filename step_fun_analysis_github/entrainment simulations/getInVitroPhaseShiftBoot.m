@@ -9,6 +9,9 @@ funname = mfilename('fullpath');
 step = STEPFUN;
 
 % convert input radians to [0,1]; ph0= min. pt of oscillation
+% don't need to adjust phase of step for fluor. pol.-derived functions,
+% because the experimental_L_and_D_funs.m script already takes care of
+% that.
 step.phase = step.phase/(2*pi);
 step.phaseShift = step.phaseShift/(2*pi);
 

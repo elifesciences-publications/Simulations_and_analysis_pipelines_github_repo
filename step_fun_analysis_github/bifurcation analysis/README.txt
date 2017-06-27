@@ -1,4 +1,4 @@
-Scripts used for bifurcation analysis (fig. 3-figSup 1)
+Scripts used for bifurcation analysis (Fig. 3-figSup 2)
 *************************************
 
 To run simulations 
@@ -16,7 +16,11 @@ To plot simulation results
 parametes (look them up in the timestamped simulation script if you forgot).
 2. Hit run -- this will generate the bifurcation diagram.
 
-To plot simulation results in Fig. 3-figSup1
+To plot simulation results in Fig. 3-figSup2
 ********************************************
 1. Run analyzePhOsc_Sims_Boot_LinNLin_freqSweep.m using 
 TIMESTAMP_freqSweep_fine.mat as the input file. 
+
+Example input and output files ...
+******************************
+... are provided in saved_data/ subfolder.

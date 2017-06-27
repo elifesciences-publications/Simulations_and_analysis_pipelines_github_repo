@@ -22,7 +22,7 @@ if TOTEST==1
     
     %input file to load step functions       
     INDIR=['../helper functions and shared files/'];
-    INFILE = '2017-04-01_mergedStepFuns_11.35.34.mat.mat';
+    INFILE = '2017-06-05_widefit_mergedStepFuns_11.30.54.mat';
     load([INDIR '/' INFILE]);
     
     %if your step function file contains multiple step functions (e.g.,
@@ -237,45 +237,8 @@ if TOPLOT==1
     hold on;
     plot(t(~lightson),mod(ph(~lightson),1),'k.','linewidth',1);
     hold on;
-    
-    if DUTYFRAC*Tdrive > 0+dt & DUTYFRAC*Tdrive < Tdrive-dt
-        %dusk
-        plot(t(logical(dusk)),mod(ph(logical(dusk)),1),...
-            'mo','markersize',7,'linewidth',1);
-        hold on;
-        
-        %dawn
-        plot(t(logical(dawn)),mod(ph(logical(dawn)),1),...
-            'go','markersize',7','linewidth',1);
-        hold on;
-        
-        %dawn+dawnshift
-        plot(t(logical(dawn)),...
-            mod(...
-            ph(logical(dawn))+dawnshift(logical(dawn))+(1/Tlight)*dt,...
-            1),...
-            'gs','markerfacecolor','g','markersize',7','linewidth',1);
-        hold on;
-        
-        %dusk+duskshift
-        plot(t(logical(dusk)),...
-            mod(...
-            ph(logical(dusk))+duskshift(logical(dusk))+(1/Tdark)*dt,...
-            1),...
-            'ms','markerfacecolor','m','markersize',7','linewidth',1);
-        hold on;
-    end
-
-    titStr = ['Tlight=' num2str(Tlight) ', Tdark=' num2str(Tdark) ...
-        10 'Tdrive=' num2str(Tdrive) ', dutyDrive=' num2str(dutyDrive)]; 
-    
-    if DUTYFRAC*Tdrive > 0+dt & DUTYFRAC*Tdrive < Tdrive-dt
-        titStr=[titStr ...
-        10 'end dawnPhase=' sprintf('%2.4f',DAWNPHASE(end)) ',' ...
-        10 'end dawnPshift=' sprintf('%2.4f',DAWNPHASESHIFT(end))];
-    end
-    
-    title(titStr);
+   
+    title(['PRC']);
     xlim([0 120]);
     set(gca,'xtick',0:24:120,'ytick',[0:0.25:1]);
     xlabel('hours');

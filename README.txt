@@ -1,4 +1,4 @@
-2017-Apr-02, Eugene Leypunskiy (leypunskiy@uchicago.edu)
+2017-June-27, Eugene Leypunskiy (leypunskiy@uchicago.edu)
 ******************************
 
 This directory contains scripts and functions used to analyze data and perform simulations described in "The cyanobacterial circadian clock tracks midday in vivo and in vitro" by Leypunskiy et al.
@@ -29,18 +29,22 @@ Figure 3C-D
 ********
 Refer to step_fun_from_polarization_github/.
 
+Figure 3E-F
+********
+Refer to step_fun_pkaic_github/ for analysis of step-response functions measured by monitoring KaiC phosphorylation using SDS-PAGE.
+
 Figure 3 - figure supplement 1
 ******************************
 Refer to step_fun_analysis_github/bifurcation analysis/.
 
 -------------------------------------------------------------------------
 
-Figure 4 (incl. figure supplements 1, 4)
+Figure 4 (incl. figure supplements 1A-B, 2A, 2C, 3)
 ********
 Refer to entrainment simulations in step_fun_analysis_github/entrainment simulations/.
 
-Figure 4 - figure supplement 2
-******************************
+Figure 4 - figure supplement 2B
+*******************************
 Refer to step_fun_pkaic_github/ for analysis of step-response functions measured by monitoring KaiC phosphorylation using SDS-PAGE.
 
 Figure 4 - figure supplement 3
@@ -49,6 +53,7 @@ Refer to step_fun_from_polarization_github/readme.txt.
 Run mSlope_LD.m
 
 -------------------------------------------------------------------------
+
 Figure 5 
 ********
 Refer to in_vivo_phase_oscilllator_model_fit_github/.
@@ -68,3 +73,7 @@ Figure 6 - figure supplement 3
 Refer to dawn_dusk_genes_mVals_github/.
 
 -------------------------------------------------------------------------
+
+Mathematical Appendix Figure (illustrations in A-D)
+****************************
+Refer to step_fun_pkaic_github/.

@@ -1,3 +1,4 @@
+%2017-06-13, EL: updated fitting pipeline
 %2017-03-29, EL: perform one non-parametric bootstrap resampling of
 %stepup/down data and do a global fit, as described in Computational
 %Methods. 
@@ -19,8 +20,8 @@ function [PARSET_hiATP, PARSET_loATP, STEPOUT] = ...
 
 %% function parameters
 TOTEST = 0; %to run function that plots resampled data (one bootstrap) + best fit to it?
-TORESAMPLE = 1; %if 1, sample all data with replacement ; if 0, don't bootstrap -- use entire dataset
-TOPLOT_STEPFUNS = 0; %plot step functions for this sample of data?
+TORESAMPLE = 0; %if 1, sample all data with replacement ; if 0, don't bootstrap -- use entire dataset
+TOPLOT_STEPFUNS = 1; %plot step functions for this sample of data?
 TOEXPORT_fBootStep = 0; %export step fun figure?
 
 %% load raw data, step times; set normalization/fit parameters
@@ -118,17 +119,78 @@ if TOTEST == 1
 end
 
 %return;
-%% compute L and D fns from the params
+
+%% compute L and D fns from fit params
+  %best way to do this:
+    %(1) compute phase of uperturbed sU rxn at step time 
+    %     = phase of loATP control at stepUptime
+    %     = (2*pi*stepUpTime/loATP_per) - phase_of_control_rxn_in_loATP
+    %
+    %(2) compute 'perturbed' phase of sU rxn at step time = 
+    %     = phase of 'perturbed' sU rxn (in hiATP conditions) at stepUptime
+    %     = (2*pi*stepUpTime/hiATP_per) - phase_of_sU_rxn_in_hiATP
+    %
+    %(3) subtract the two
+
 for n=1:numnew
-    %compute step phases (use control rxn period (par(n=31)) and phase
-    %(par(n,30))
-    %recall that sUTime and sDTime have 'nan' as last entry
-    sUPhase(n,:) = (2*pi*stepUpTime(1:9)/hiATPfit_mat(n,end)) - hiATPfit_mat(n,30);
-    sDPhase(n,:) = (2*pi*stepDownTime(1:9)/loATPfit_mat(n,end)) - loATPfit_mat(n,30);
+     
+    %hiATP period
+    hiATP_fitper = hiATPfit_mat(n,end);
+        
+    %loATP period
+    loATP_fitper = loATPfit_mat(n,end);
+        
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%% Deal with sD rxns %%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    compute_D_fun = 1;
+    if compute_D_fun == 1
+        %need phases of hiATP control to compute unperturbed phases 
+        % == reference phases
+        %did this in two sets, so rxns 1-7 and 8-14 have different
+        %reference phases
+        hiATP_control_fitphase(1:9) = hiATPfit_mat(n,3*10); 
+                
+        %sD phase = phase of hiATP control at stepDownTime
+        sDPhase(n,1:9) = ...
+            (2*pi*stepDownTime(1:9)/hiATP_fitper) - hiATP_control_fitphase(1:9);
+        
+        %sD phase perturbed = phase of sD rxns at stepDownTime
+        %(i.e., use loATP period and phase of fit rxns, not control)
+        sDPhase_perturbed(n,1:9) = ...
+            (2*pi*stepDownTime(1:9)/loATP_fitper) - loATPfit_mat(n,(1:9)*3);
+        
+        sDPhaseShift(n,1:9) = sDPhase - sDPhase_perturbed;
+    else
+        sDPhase = [];
+        sDPhase_perturbed = [];
+        sDPhaseShift = [];
+    end
     
-    %compute phase shifts
-    sUPhaseShift(n,:) = hiATPfit_mat(n,3:3:27) - hiATPfit_mat(n,30);
-    sDPhaseShift(n,:) = loATPfit_mat(n,3:3:27) - loATPfit_mat(n,30);
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%% Deal with sU rxns %%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    compute_L_fun = 1;
+    if compute_L_fun == 1
+        
+        %phases of loATP control = references for phase shift calculations
+        loATP_control_fitphase(1:9) = loATPfit_mat(n,3*10);
+        
+        %sUPhase = phase of loATP control at stepUpTime
+        sUPhase(n,1:9) = ...
+            (2*pi*stepUpTime(1:9)/loATP_fitper) - loATP_control_fitphase(1:9);
+        
+        %sUPhase_perturbed = phase of sU rxn at stepUp time
+        sUPhase_perturbed(n,1:9) = ...
+            (2*pi*stepUpTime(1:9)/hiATP_fitper) - hiATPfit_mat(n,(1:9)*3);
+               
+        %subtract the two
+        sUPhaseShift = sUPhase - sUPhase_perturbed;
+    else
+        sUPhase = [];
+        sUPhase_perturbed = [];
+        sUPhaseShift = [];
+    end
 end
 
 %% make L and D periodic
@@ -154,18 +216,14 @@ elseif min(sDPhase) < -2*pi*1.25
 end
 
 %arrange for double plotting
-stepUpPhase = [z*sUPhase z*(sUPhase+2*pi)];
-stepDownPhase = [z*sDPhase z*(sDPhase+2*pi)];
-stepUpPhaseShift = [z*sUPhaseShift z*sUPhaseShift];
-stepDownPhaseShift = [z*sDPhaseShift z*sDPhaseShift];
-
-%wrap around
-% stepDownPhaseShift(stepDownPhaseShift < -(z*pi*0.5)) = ...
-%     stepDownPhaseShift(stepDownPhaseShift < -(z*pi*0.5)) + z*2*pi;
-% stepDownPhaseShift(stepDownPhaseShift > z*1.2*pi) = ...
-%     stepDownPhaseShift(stepDownPhaseShift > z*1.2*pi) - z*2*pi;
-% stepUpPhaseShift(stepUpPhaseShift < -(z*pi*1.1)) = ...
-%     stepUpPhaseShift(stepUpPhaseShift < -(z*pi*1.1))+z*2*pi;
+stepUpPhase = [z*(sUPhase-2*pi) z*sUPhase ...
+                    z*(sUPhase+2*pi) z*(sUPhase+4*pi)];
+stepDownPhase = [z*(sDPhase-2*pi) z*sDPhase ...
+                    z*(sDPhase+2*pi) z*(sDPhase+4*pi)];
+stepUpPhaseShift = [z*sUPhaseShift z*sUPhaseShift ...
+                    z*sUPhaseShift z*sUPhaseShift];
+stepDownPhaseShift = [z*sDPhaseShift z*sDPhaseShift ...
+                    z*sDPhaseShift z*sDPhaseShift];
 
 %% wrap around -- better; think these next 6 lines do a better job than the 
 % entire complicated procedure below that compares things to lin fits
@@ -177,6 +235,13 @@ if (min(stepUpPhaseShift > 0))
     stepUpPhaseShift = stepUpPhaseShift - 2*pi;
 end
 
+%make sure mean is around 0
+if mean(stepDownPhaseShift) > pi
+    stepDownPhaseShift = stepDownPhaseShift - 2*pi;
+elseif mean(stepDownPhaseShift) < - pi
+    stepDownPhaseShift = stepDownPhaseShift + 2*pi;
+end
+
 %sort step funs after double plotting
 [~,sdOrd] = sort(stepDownPhase);
 [~,suOrd] = sort(stepUpPhase);
@@ -185,69 +250,73 @@ stepUpPhaseShift = stepUpPhaseShift(suOrd);
 stepDownPhase = stepDownPhase(sdOrd);
 stepDownPhaseShift = stepDownPhaseShift(sdOrd);
 
+%where you believe is the breakpoint on the sD curve?
+%-0.5*2*pi*z wrap gives larger left break, smaller right break
+%-0.3*2*pi*z wrap is bigger left
+stepDownPhaseShift = ...
+    wrapVecAround(stepDownPhaseShift,-0.3*2*pi*z,2*pi*z,'lt');
+
 %% do linear fits
 for n=1:numnew
-
-      DInd = [2 5 1]; %was [2 5 2] %[linLo linHi BreakPt]; breakPt = first pt on new curve
-      LInd = [6 10 6];
-      
-      xx = z*(-2.5*pi:0.02:2.5*pi); %was 0.1
-      
-      %find indices for fit -- LInd, DInd aren't for sorted 
-           
-      sUlinfit(n,:) = fitToLine(stepUpPhase(n,LInd(1):LInd(2)),...
-          stepUpPhaseShift(n,LInd(1):LInd(2)));
-      sDlinfit(n,:) = fitToLine(stepDownPhase(n,DInd(1):DInd(2)),...
-          stepDownPhaseShift(n,DInd(1):DInd(2)));
-      
-      %get [0, 2pi] right, then replicate
-      sULineX(n,1:numel(xx)) = xx;
-      upBreak(n) = stepUpPhase(n,LInd(3))-0.75; %used to be -0.1
-      
-      sULineY(n,xx > upBreak(n) & xx <= upBreak(n)+2*pi*z) = ...
-          polyval(sUlinfit(n,[1 2]),...
-                  xx(xx > upBreak(n) & xx <= upBreak(n)+2*pi*z));
-            
-      sULineY(n,xx <= upBreak(n) & xx > upBreak(n)-2*pi*z) = ...
-          polyval(sUlinfit(n,[1 2])+[0 2*pi*z*sUlinfit(n,1)],...
-          xx(xx <= upBreak(n) & xx > upBreak(n)-2*pi*z));
-      
-      sULineY(n,xx > upBreak(n)+2*pi*z & xx <= upBreak(n)+4*pi*z) = ... 
-              polyval(sUlinfit(n,[1 2])-[0 2*pi*z*sUlinfit(n,1)],...
-                  xx(xx > upBreak(n)+2*pi*z & xx <= upBreak(n)+4*pi*z));
-      
-      sULineY(n, xx > upBreak(n) + 4*pi*z) = ... %just added
-              polyval(sUlinfit(n,[1 2])-[0 4*pi*z*sUlinfit(n,1)],...
-                  xx(xx > upBreak(n) + 4*pi*z));
-              
-      %get [0, 2pi] right, then replicate
-      sDLineX(n,1:numel(xx)) = xx;
-      downBreak(n) = stepDownPhase(n,DInd(3))-0.1; %kluge to get breakpt just after step
-              
-      sDLineY(n,xx > downBreak(n) & xx <= downBreak(n)+2*pi*z) = ...
-          polyval(sDlinfit(n,[1 2]),...
-                  xx(xx > downBreak(n) & xx <= downBreak(n)+2*pi*z));
-              
-      sDLineY(n,xx <= downBreak(n)) = ...
-          polyval(sDlinfit(n,[1 2])+[0 2*pi*z*sDlinfit(n,1)],...
-          xx(xx <= downBreak(n)));
-      
-      sDLineY(n,xx > downBreak(n)+2*pi*z & xx <= downBreak(n)+4*pi*z) = ... 
-              polyval(sDlinfit(n,[1 2])-[0 2*pi*z*sDlinfit(n,1)],...
-                  xx(xx > downBreak(n)+2*pi*z & xx <= downBreak(n)+4*pi*z));
-              
-      sDLineY(n, xx > downBreak(n)+4*pi*z) = ...
-              polyval(sDlinfit(n,[1 2]) - 2*[0 2*pi*z*sDlinfit(n,1)],...
-                  xx(xx > downBreak(n) + 4*pi*z));
-                    
+    
+    %manually chosen endpoints for linear fits and breakpoints
+    %note: cannot select (x,y) coordinates here because they'll be
+    %different for different bootstraps.
+    %instead, must choose the indices of pts in the phase[] vector.
+    DInd = [2 6 1]; %was [2 5 2] %[linLo linHi BreakPt]; breakPt = first pt on new curve
+    LInd = [6 11 6];
+    
+    DInd = [10 15 10];
+    xx = z*(-2.5*pi:0.02:2.5*pi); %was 0.1
+    
+    sUlinfit(n,:) = fitToLine(stepUpPhase(n,LInd(1):LInd(2)),...
+        stepUpPhaseShift(n,LInd(1):LInd(2)));
+    sDlinfit(n,:) = fitToLine(stepDownPhase(n,DInd(1):DInd(2)),...
+        stepDownPhaseShift(n,DInd(1):DInd(2)));
+        
+    %get [0, 2pi] right, then replicate
+    sULineX(n,1:numel(xx)) = xx;
+    upBreak(n) = stepUpPhase(n,LInd(3))-0.75; %used to be -0.1
+    
+    sULineY(n,xx > upBreak(n) & xx <= upBreak(n)+2*pi*z) = ...
+        polyval(sUlinfit(n,[1 2]),...
+        xx(xx > upBreak(n) & xx <= upBreak(n)+2*pi*z));
+    
+    sULineY(n,xx <= upBreak(n) & xx > upBreak(n)-2*pi*z) = ...
+        polyval(sUlinfit(n,[1 2])+[0 2*pi*z*sUlinfit(n,1)],...
+        xx(xx <= upBreak(n) & xx > upBreak(n)-2*pi*z));
+    
+    sULineY(n,xx > upBreak(n)+2*pi*z & xx <= upBreak(n)+4*pi*z) = ...
+        polyval(sUlinfit(n,[1 2])-[0 2*pi*z*sUlinfit(n,1)],...
+        xx(xx > upBreak(n)+2*pi*z & xx <= upBreak(n)+4*pi*z));
+    
+    sULineY(n, xx > upBreak(n) + 4*pi*z) = ... %just added
+        polyval(sUlinfit(n,[1 2])-[0 4*pi*z*sUlinfit(n,1)],...
+        xx(xx > upBreak(n) + 4*pi*z));
+    
+    %get [0, 2pi] right, then replicate
+    sDLineX(n,1:numel(xx)) = xx;
+    downBreak(n) = stepDownPhase(n,DInd(3))-0.1; %kluge to get breakpt just after step
+    
+    sDLineY(n,xx > downBreak(n) & xx <= downBreak(n)+2*pi*z) = ...
+        polyval(sDlinfit(n,[1 2]),...
+        xx(xx > downBreak(n) & xx <= downBreak(n)+2*pi*z));
+    
+    sDLineY(n,xx <= downBreak(n)) = ...
+        polyval(sDlinfit(n,[1 2])+[0 2*pi*z*sDlinfit(n,1)],...
+        xx(xx <= downBreak(n)));
+    
+    sDLineY(n,xx > downBreak(n)+2*pi*z & xx <= downBreak(n)+4*pi*z) = ...
+        polyval(sDlinfit(n,[1 2])-[0 2*pi*z*sDlinfit(n,1)],...
+        xx(xx > downBreak(n)+2*pi*z & xx <= downBreak(n)+4*pi*z));
+    
+    sDLineY(n, xx > downBreak(n)+4*pi*z) = ...
+        polyval(sDlinfit(n,[1 2]) - 2*[0 2*pi*z*sDlinfit(n,1)],...
+        xx(xx > downBreak(n) + 4*pi*z));
+    
 end
 
-%% adjust kinks
-stepUpPhaseShift(n,:) = adjKinksToLinear(stepUpPhase(n,:),stepUpPhaseShift(n,:),...
-                                            sULineX(n,:),sULineY(n,:));
-stepDownPhaseShift(n,:) = adjKinksToLinear(stepDownPhase(n,:), stepDownPhaseShift(n,:),...
-                                            sDLineX(n,:), sDLineY(n,:));
-                                        
+                                  
 %% package outputs (end of required steps)
 PARSET_hiATP = hiATPfit_mat;
 PARSET_loATP = loATPfit_mat;
@@ -271,6 +340,7 @@ for n=1:numnew
         'markerfacecolor','b','markersize',4,'linewidth',2);
     hold on;
     pUpLin=plot(z*sULineX(n,:),z*sULineY(n,:),'b-','linewidth',0.5);
+    plot(z*(stepUpPhase(n,LInd(1:2))+2*pi),z*stepUpPhaseShift(n,LInd(1:2)),'w.');
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -297,6 +367,7 @@ for n=1:numnew
         'markerfacecolor','r','markersize',4,'linewidth',2);
     hold on;
     pDownLin=plot(z*sDLineX(n,:),z*sDLineY(n,:),'r-','linewidth',0.5);
+    plot(z*(stepDownPhase(n,DInd(1:2))+2*pi),z*stepDownPhaseShift(n,DInd(1:2)),'k.');
 end
 legend([pUp,pDown,pUpLin,pDownLin],...
     'L(\theta)','D(\theta)','L_{lin}(\theta)','D_{lin}(\theta)',...

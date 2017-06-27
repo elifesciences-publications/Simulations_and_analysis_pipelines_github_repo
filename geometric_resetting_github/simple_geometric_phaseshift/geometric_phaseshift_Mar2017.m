@@ -6,15 +6,15 @@ close all;
 clear all;
 
 %export
-TOEXP = 0;
+TOEXP = 1;
 
 %what is the radius of the night circle? how far apart are the circles? 
-R=10^[0.7];
-X=10^[0.5];
+R=2; %10^[0.7];
+X=2; %10^[0.5];
 
 %at what angles (in degrees) do you want to draw L and D steps?
 %NOTE: do not set theta==0 here. 360 is OK. 
-thetaSteps = [1 60:60:360]; %in degrees
+thetaSteps = [(30:30:360) 165 195]; %in degrees
 
 %colors of day/night circles and arrows
 nightCol = [0.2 0.2 0.2];

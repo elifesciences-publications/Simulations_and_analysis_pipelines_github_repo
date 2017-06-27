@@ -1,3 +1,4 @@
+%2017-05-29, EL: revision
 %2107-03-30, EL: perform a global fit to all of the data from an experiment
 %measuring D(theta) step-response function. Save data. 
 %
@@ -9,7 +10,7 @@ clear all;
 
 %% load raw data, step times; set normalization/fit parameters
 TOSAVEPARAMS = 1;
-SAVENAME = 'Feb28_plateReader_FullFile_';
+SAVENAME = 'Feb28data_June5anl_fit16plus_linWide_';
 TOSAVESTEPFUNS = 1;
 
 INDIR = ['.'];

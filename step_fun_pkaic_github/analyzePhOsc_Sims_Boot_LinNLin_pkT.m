@@ -19,8 +19,8 @@ TOLOAD_OLD_SIMULATION_ONE = 1; %load data from first simulation? (1=yes)
 TOLOAD_OLD_SIMULATION_TWO = 1; %load data from second simulation? (1=yes)
 
 %files containing simulation results
-SIM_BOOT_NONLIN = ['saved_data/2017-03-29_NonLin_1000.mat']; %for simulations based on non-linear L and D
-SIM_BOOT_LIN    = ['saved_data/2017-03-29_Lin_1000.mat']; %for simulations based on linearized L and D
+SIM_BOOT_NONLIN = [pwd '/' 'saved_data/' '2017-06-05_16.05.25_NPB_1000.mat']; %for simulations based on non-linear L and D
+SIM_BOOT_LIN    = [pwd '/' 'saved_data/' '2017-06-05_16.10.51_NPB_Lin_1000.mat']; %for simulations based on linearized L and D
 
 %% load results of first simulation here
 if TOLOAD_OLD_SIMULATION_ONE == 1
@@ -77,9 +77,9 @@ disp(['Frac entrained: ' num2str(...
 
 %specifically for tau between 8 and 16
 gf = dutyfrac <= 16/24 & dutyfrac >= 8/24;
-disp(['Total no. sims. tau=6-18: ' num2str(numel(entrained(gf,:)))]);
-disp(['No. entrained sims. tau=6-18: ' num2str(sum(sum(entrained(gf,:))))]);
-disp(['Frac entrained tau=6-18: ' num2str(...
+disp(['Total no. sims. tau=8-16: ' num2str(numel(entrained(gf,:)))]);
+disp(['No. entrained sims. tau=8-16: ' num2str(sum(sum(entrained(gf,:))))]);
+disp(['Frac entrained tau=8-16: ' num2str(...
     sum(sum(entrained(gf,:)))/...
     numel(entrained(gf,:))...
     )]);
@@ -108,8 +108,8 @@ for b=boot
 end
 
 %% find all those entrained within 3 cycles
-%and how many unentrained for daylengths 6-18 hrs
-gf = dutyfrac <= 18/24 & dutyfrac >= 6/24;
+%and how many unentrained for daylengths 8-16 hrs
+gf = dutyfrac <= 16/24 & dutyfrac >= 8/24;
 gNumToEnt = numToEnt(:,gf);
 
 num1to3 = sum(sum(gNumToEnt == 1 | gNumToEnt == 2 | gNumToEnt == 3));
@@ -125,7 +125,8 @@ disp([num2str(fracQuick_notNan) ' entrained within 3 cycles out of successful si
 for df=1:numel(dutyfrac)
     tau(df) = dutyfrac(df);
     entr = logical(entrained(df,:));
-    goodph = plotphase(df,end,entr);
+    goodph = squeeze(plotphase(df,end,entr));
+    %disp(['num unique goodph: ' num2str(numel(unique(goodph)))]);
     %goodph = goodph(goodph < 0.33);
     [taumean(df), taustd(df), taubreakpt(df)] = circleMean(goodph, 1, []);
 end
@@ -174,6 +175,21 @@ set(gca,'xlim',[0 24],'ylim',sort(fvec([-0.5 0.5])),...
     'xtick',0:6:24,'ytick',sort(fvec([-0.5:(1/4):0.5])));
 grid off;
 set(fErrorBar,'units','inches','position',[0 0 4 3]);
+
+%% calc. peak times converted to KaiC phospho units
+toexp_pts = 1;
+if toexp_pts == 1
+    %store calc. peak times in KaiC phospho units
+    ds = [];
+    dsTable = [
+        vitro.pp' vitro.pkT' vitro.pkT_Err'];
+    dsNames = {'day_length_hrs','peak_time_CT_hrs','peak_time_error_CT_hrs'};
+    ds = mat2dataset(dsTable);
+    ds.Properties.VarNames = dsNames;
+    export(ds,'FILE','Fig4-figSup2B-sourcedata-PkaiC.csv','Delimiter',',');
+end
+
+
 %%
 if toexp_VitroSilico == 1
     export_fig([pwd '/' getDate('yyyy-mm-dd') '_fInVitroSilico_'...
@@ -230,13 +246,48 @@ if TOLOAD_OLD_SIMULATION_TWO == 1
     
     %specifically for tau between 8 and 16
     gf = dutyfrac <= 16/24 & dutyfrac >= 8/24;
-    disp(['Total no. linear sims. tau=6-18: ' num2str(numel(entrained(gf,:)))]);
-    disp(['No. entrained linear sims. tau=6-18: ' num2str(sum(sum(entrained(gf,:))))]);
-    disp(['Frac entrained linear tau=6-18: ' num2str(...
+    disp(['Total no. linear sims. tau=8-16: ' num2str(numel(entrained(gf,:)))]);
+    disp(['No. entrained linear sims. tau=8-16: ' num2str(sum(sum(entrained(gf,:))))]);
+    disp(['Frac entrained linear tau=8-16: ' num2str(...
         sum(sum(entrained(gf,:)))/...
         numel(entrained(gf,:))...
         )]);
     
+    %% figure out how quickly you entrain
+    pstdev=[];
+    numToEnt=[];
+    NME=3;
+
+    for b=boot
+        for df=1:numel(dutyfrac)
+            for n=1:numel(numcyc)-NME
+                %pstdev(df,b,n) = std(squeeze(plotphase(df,n:n+NME,b)));
+                [~,pstdev(df,b,n),~] = ...
+                    circleMean(squeeze(plotphase(df,n:n+NME,b)),1,[]);
+            end
+
+            %find index of
+            nte = find(pstdev(df,b,:) <= STDEV_LIM,1,'first');
+            if ~isempty(nte)
+                numToEnt(b,df) = numcyc(nte);
+            else
+                numToEnt(b,df) = nan;
+            end
+        end
+    end
+
+    %% find all those entrained within 3 cycles
+    %and how many unentrained for daylengths 8-16 hrs
+    gf = dutyfrac <= 16/24 & dutyfrac >= 8/24;
+    gNumToEnt = numToEnt(:,gf);
+
+    num1to3 = sum(sum(gNumToEnt == 1 | gNumToEnt == 2 | gNumToEnt == 3));
+    numNan = sum(sum(isnan(gNumToEnt)));
+    numNet = numel(gNumToEnt);
+    fracQuick = num1to3/numNet;
+    fracQuick_notNan = num1to3/(numNet-numNan);
+    disp([num2str(fracQuick) ' entrained within 3 cycles for linear sims']);
+    disp([num2str(fracQuick_notNan) ' entrained within 3 cycles out of successful simulations for linear sims']);
     
     %% plot avg phase+/-std for entrained tau's for second dataset
     %go through dfs, collect [tau, taustd]
@@ -268,8 +319,8 @@ if TOLOAD_OLD_SIMULATION_TWO == 1
     delete(pFill2);
     
     legend([pVitro,pFill,pErr3],...%, pFill2],...
-        'in vitro \pm \sigma','simulation \pm \sigma','linearized simulation \pm \sigma',...
-        'location','southwest');
+        'in vitro \pm \sigma','simulation \pm \sigma','lin. simulation \pm \sigma',...
+        'location','southeast');
     uistack(pVitro,'top');
     legend boxoff;
     %%

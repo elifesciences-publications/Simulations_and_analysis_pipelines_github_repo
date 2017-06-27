@@ -10,9 +10,11 @@ TOSAVE_DATA = 1;
 
 %% simulation parameters
 TDRIVE=[6:1:48]; %driving periods
-
+                 %figure in text: TDRIVE=[6:0.0025:48];
+                 
 %after how many cycles do you want to store phases at dawn/dusk and phase shifts?
 numcyc = [1:100]; %muct be a vector, not just max value!
+                  %figure in text: numcyc = [1:(100*10)]; 
 
 DUTYFRAC=0.5; %always balanced duty cycle
 TEND = (max(numcyc)+0.1)*TDRIVE;
@@ -28,7 +30,7 @@ boot = [1];
 %load bootstrapped step funs
 % NOTE! must be in 2*pi units
 INDIR=['../helper functions and shared files/'];
-INFILE='2017-03-14_stepFunMixMatch_19.52.40.mat';
+INFILE='2017-06-05_widefit_mergedStepFuns_11.30.54.mat';
 load([INDIR '/' INFILE]);
 
 %pre-allocate save variables

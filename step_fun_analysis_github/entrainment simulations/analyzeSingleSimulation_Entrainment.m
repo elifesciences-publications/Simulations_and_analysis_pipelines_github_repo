@@ -15,7 +15,7 @@ INDIR=['.'];
 cd(INDIR);
 
 %export figs?
-toexp_fDiffTau = 1; %(1=yes) simulations for different tau values from same starting phase
+toexp_fDiffTau = 0; %(1=yes) simulations for different tau values from same starting phase
 toexp_fDiffPhases = 0; %(1=yes) simulations for same tau value for different starting phases
 
 %% set simulation parameters here
@@ -35,7 +35,7 @@ assert((numel(boot)) == 1); %analyze one a at a time
 %% load step function
 %NOTE! must be in 2*pi units
 STEPFUN_BOOT = ['../helper functions and shared files/'...
-    '2017-04-01_mergedStepFuns_11.35.34.mat'];
+    '2017-06-05_widefit_mergedStepFuns_11.30.54.mat'];
 load([STEPFUN_BOOT]);
 
 %% run simulations with different L and D funs
@@ -157,7 +157,7 @@ for s=1:numel(startphase)
         hold on;
         plot([0 numcyc],[startphase(s) plotphase(df,1:numel(numcyc),s)],...
             '-','color',colors(df,:),'linewidth',1);
-        lab{df} = ['\tau=' num2str(TDRIVE*dutyfrac(df))];
+        lab{df} = ['\tau = ' num2str(TDRIVE*dutyfrac(df)) ' h'];
     end
     if s>0
         legend(p,lab,'location','northeast');

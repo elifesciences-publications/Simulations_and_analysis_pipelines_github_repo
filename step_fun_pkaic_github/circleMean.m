@@ -10,6 +10,10 @@ function [MEANOUT, STDEVOUT, OUTBREAKPT] = circleMean(VEC, PER, INBREAKPT)
 %get rid of nan's for simplicity
 vec = VEC(~isnan(VEC));
 
+if numel(vec) < 1
+    warning('input vec is all NaN!');
+end
+
 %convert data to polar coordinates: x=r*cos(theta), y=r*sin(theta)
 r = PER/(2*pi);
 theta = (2*pi)*mod(vec,PER)/PER;
@@ -31,8 +35,8 @@ vecprime(vecprime > pi) = vecprime(vecprime > pi) - 2*pi;
 vecprime(vecprime <= -pi) = vecprime(vecprime <= -pi) + 2*pi;
 
 %compute mean using breakpoint as reference
-MEAN = mean(vecprime) + thetabar;
-STD = std(vecprime);
+MEAN = nanmean(vecprime) + thetabar;
+STD = nanstd(vecprime);
 BREAKPT = thetabar;
 
 %return values in same coordinates as inputs
@@ -42,6 +46,9 @@ OUTBREAKPT = BREAKPT*PER/(2*pi);
 
 if isnan(MEANOUT) || isnan(STDEVOUT)
     warning('Problem in circle mean!');
+    disp(['MEAN: ' num2str(MEAN) ', STD: ' num2str(STD) ...
+          ', break: ' num2str(BREAKPT) ', PER: ' num2str(PER) ...
+          ', thetabar: ' num2str(thetabar)]);
 end
 
 %check by plotting

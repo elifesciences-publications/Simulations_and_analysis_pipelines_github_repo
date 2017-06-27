@@ -1,8 +1,0 @@
-2017-04-01 notes from merging step funs
-**********
-wD/wL = 0.93555 +/- 0.0094431
-lslope = 0.42812 +/- 0.048816
-dslope = 0.35748 +/- 0.00015785
-boot lslope = 0.37832 +/- 0.053336
-boot dslope = 0.34435 +/- 0.033016
-boot mslope = 0.36366 +/- 0.056944, for OMR=1

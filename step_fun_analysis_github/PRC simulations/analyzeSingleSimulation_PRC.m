@@ -13,7 +13,7 @@ cd(INDIR);
 TODISP = 0; %display outputs?
 LO_PP = 0; % which DPs to mark (LO_PP = phase of earliest DP, etc.);
 HI_PP = 24; % HI_PP = last time to give DP
-TOEXP_DOUBLEFIG = 0; %save fig?
+TOEXP_DOUBLEFIG = 1; %save fig?
 
 %%
 DPDUR = 12;
@@ -31,9 +31,9 @@ colors = flipud(colors); %so that later DP = darker colors
 
 %% load boostrapped step functions
 %NOTE! must be in radians. don't normalize by 2*pi
-STEPFUN_BOOT = '../helper functions and shared files/2017-04-01_mergedStepFuns_11.35.34.mat';
+STEPFUN_BOOT = '../helper functions and shared files/2017-06-05_widefit_mergedStepFuns_11.30.54.mat';
 load([STEPFUN_BOOT]);
-boot = [1]; %which of the bootstraps or combinations of L and D do you want to run?
+boot = [2]; %which of the bootstraps or combinations of L and D do you want to run?
 
 %% run PRC simulations
 for b=boot

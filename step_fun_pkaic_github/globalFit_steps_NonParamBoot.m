@@ -1,3 +1,4 @@
+%2017-05-29, EL: revise to account for period differences in hi vs lo ATP
 %2016-09-04, EL: generate nonparametric boostrap parameters for stepup/down
 %experiment using the bestFitNonParBoot.m function. For every set of
 %parameters, this function generates stepUp, stepDown fns as well as their 
@@ -11,13 +12,14 @@ INDIR = ['.'];
 cd(INDIR);
 TOSAVEPARAMS = 1; %Save fit parameters for every bootstrap? (1=yes)
 TOSAVESTEPFUNS = 1; %Save bootstrapped step functions? (1=yes)
-SAVENAME = 'Lin-NLin-_';
+SAVENAME = 'JuneFit_updFitPipe_wideLinFit';
 
 %% draw nonparametric boostraps by resampling %P KaiC data 
-NUMBOOT = 20; %how many bootstraps to generate?
+NUMBOOT = 1000; %how many bootstraps to generate?
 
 for n=1:NUMBOOT
     [hiATP_param(n,:), loATP_param(n,:), STEPOUT] = bestFitNonParBoot;
+    %[hiATP_param(n,:), loATP_param(n,:), STEPOUT] = bestFitNonParBoot;
     %STEPOUT = {stepUpPhase, stepUpPhaseShift, T_hiATP, sULineX, sULineY, sUlinfit, upBreak, ...
     %stepDownPhase, stepDownPhaseShift, T_loATP, sDLineX, sDLineY, sDlinfit, downBreak, resampleInd};
 

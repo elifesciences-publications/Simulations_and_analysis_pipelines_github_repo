@@ -1,7 +1,6 @@
-
-2017-04-01 simulations with merged step funs 4:0.1:18 taus 
+2017-06-13 simulations with merged step funs 4:0.1:18 taus 
 **********
-(run using drivePhaseOscilStepFn_WithBoot_Fast_Two.m using TORUN_FAST=1)
+STDEV_LIM = 0.01 for lin and nonlin
 
 Total no. sims.: 564
 No. entrained sims.: 564
@@ -9,11 +8,14 @@ Frac entrained: 1
 Total no. sims. tau=6-18: 324
 No. entrained sims. tau=6-18: 324
 Frac entrained tau=6-18: 1
-1 frac. entrained within 3 cycles
-1 frac. entrained w/in 3cyc out of nonNan
+0.82851 frac. entrained within 3 cycles
+0.82851 frac. entrained w/in 3cyc out of nonNan
+
 Total no. linear sims.: 564
-No. entrained linear sims.: 531
-Frac entrained linear: 0.94149
-Total no. linear sims. tau=6-18: 324
-No. entrained linear sims. tau=6-18: 324
-Frac entrained linear tau=6-18: 1
+No. entrained linear sims.: 563
+Frac entrained linear: 0.99823
+Total no. linear sims. tau=8-16: 324
+No. entrained linear sims. tau=8-16: 324
+Frac entrained linear tau=8-16: 1
+1 frac. entrained within 3 cycles in linear sims
+1 frac. entrained w/in 3cyc out of nonNan in linear sims

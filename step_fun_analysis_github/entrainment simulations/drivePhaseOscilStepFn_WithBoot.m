@@ -1,3 +1,4 @@
+%2017-06-13, EL: Used to make illustrations in Fig. 4A and Fig. MA.
 %Drive a phase oscillator with 'light/dark' cycles according to
 %stepup/stepdown functions (see code re: response to dawn and dusk). Input
 %period of oscillator in light/dark, driving period, fraction of time
@@ -5,22 +6,18 @@
 %   Input: TDRIVE, TLIGHT, TDARK in hours. DUTYFRAC in [0,1], TEND in hrs.
 %   Output: DAWNPHASE [0,1] of last dawn before TEND and corresponding
 %   DAWNPHASESHIFT in response to the last dawn. Likewise for DUSK.
-%
-%
-%
 
 function [DAWNPHASE, DAWNPHASESHIFT, DUSKPHASE, DUSKPHASESHIFT] = ...
     drivePhaseOscilStepFn_WithBoot(TDRIVE, TLIGHT, TDARK, STEPUP, STEPDOWN, ...
     DUTYFRAC, TEND, NUMCYC, STARTPHASE)
 %% TEST
-TOTEST=0;
+TOTEST=1;
 if TOTEST==1
     fname = mfilename('fullpath');
     warning([fname ': Running in test mode!']);
     
-    INDIR=['/Users/E/Documents/Advisers/Rust/Photoperiod/'...
-        '2017-03-14_mixMatch_LD/analysis'];
-    INFILE = '2017-03-17_stepFunMixMatch_inKaiCPhase_19.20.23.mat';
+    INDIR=['../helper functions and shared files'];
+    INFILE = '2017-06-05_widefit_mergedStepFuns_11.30.54.mat';
     load([INDIR '/' INFILE]);
     BOOTNUM=1;
     
@@ -56,8 +53,8 @@ stepFun = str2func(BOOT_STEPFUN);
 dispif(TODISP,['Using ' func2str(stepFun) ' in ' mfilename('fullpath') '.']);
 
 %make figures?
-TO_EXPORT_LDCYCLES_FIG = 0;
-TOMAKELDCYCLES_FIG = 0;
+TO_EXPORT_LDCYCLES_FIG = 1;
+TOMAKELDCYCLES_FIG = 1;
 
 %start frpm ph[0]=0 by default
 if isempty(STARTPHASE)

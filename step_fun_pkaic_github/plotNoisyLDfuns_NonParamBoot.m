@@ -14,7 +14,7 @@ clear all;
 %% input parameters
 TOEXP_STEPFUNS = 0; %export fig?
 
-INFILE_FUN = 'saved_data/2016-10-31_stepFun_Lin-NLin-Oct_1000_2016-10-31_20.45.44.mat'; %
+INFILE_FUN = 'saved_data/2017-06-05_stepFun_JuneFit_updFitPipe_wideLinFit1000_15.49.50.mat'; %
 load(INFILE_FUN); %stepFuns and fit periods
 
 %helper fun
@@ -26,22 +26,22 @@ saveMyFig = (@(fig,figName) ...
 
 for np=1:numel(up.phase(1,:))
     [mean_upPhase(np), std_upPhase(np), up_break(np)] = ...
-        circleMean(up.phase(:,np),4*pi,[]);
+        circleMean(up.phase(:,np),4*2*pi,[]);
     [mean_upPhaseShift(np), std_upPhaseShift(np), upShift_break(np)] = ...
-        circleMean(up.phaseShift(:,np),2*pi,[]);
+        circleMean(up.phaseShift(:,np),4*2*pi,[]);
 end
 
 for np=1:numel(down.phase(1,:))
     [mean_downPhase(np), std_downPhase(np), down_break(np)] = ...
-        circleMean(down.phase(:,np),4*pi,[]);
+        circleMean(down.phase(:,np),4*2*pi,[]);
     [mean_downPhaseShift(np), std_downPhaseShift(np), downShift_break(np)] = ...
-        circleMean(down.phaseShift(:,np),2*pi,[]);
+        circleMean(down.phaseShift(:,np),4*2*pi,[]);
 end
 %% wrap stepDown around 2*pi
-mean_upPhase = mean_upPhase + pi/2 + 2*pi;
-mean_upPhase = wrapVecAround(mean_upPhase,4*pi,4*pi,'gt');
-mean_downPhase = mean_downPhase + pi/2 + 2*pi;
-mean_downPhase = wrapVecAround(mean_downPhase,4*pi,4*pi,'gt');
+mean_upPhase = mean_upPhase + pi/2; %add pi/2 to count relative to the min of %P KaiC trajectory
+% mean_upPhase = wrapVecAround(mean_upPhase,4*pi,4*pi,'gt');
+mean_downPhase = mean_downPhase + pi/2; % add pi/2 to count relative to the min of %P KaiC trajectory
+% mean_downPhase = wrapVecAround(mean_downPhase,4*pi,4*pi,'gt');
 
 %sort stepfuns
 [~,downIx] = sort(mean_downPhase);
@@ -65,13 +65,14 @@ fUpNoisy = figure();
     z*std_upPhase, z*std_upPhaseShift,'linewidth',1,'color','b');
 hold on;
 plot(z*mean_upPhase, z*mean_upPhaseShift,'sb-',...
-    'markersize',4, 'markerfacecolor','b',...
-    'markeredgecolor','none','linewidth',1);
+    'markersize',4, 'markerfacecolor','b'); %,...
+    %'markeredgecolor','none','linewidth',1);
 grid off;
-uistack(hdx_up,'bottom');
+% uistack(hdx_up,'top');
+% uistack(hdy_up,'top');
 box on;
 set(gca,'xlim',z*[0*pi 4*pi],'xtick',z*[-2*pi:0.5*pi:4*pi],...
-    'ylim',z*[-1.25*pi 1.5*pi],'ytick',z*[-pi:0.5*pi:pi]);
+    'ylim',z*[-1*pi 1.3*pi],'ytick',z*[-pi:(pi/3):pi]);
 xlabel('step time (CT hours)');
 ylabel('phase shift (CT hours)');
 
@@ -80,14 +81,19 @@ fDownNoisy=figure();
     z*std_downPhase, z*std_downPhaseShift,'linewidth',1,'color','r');
 hold on;
 plot(z*mean_downPhase, z*mean_downPhaseShift,'sr-',...
-    'markersize',4, 'markerfacecolor','r',...
-    'markeredgecolor','none','linewidth',1);
+    'markersize',4, 'markerfacecolor','r'); %,...
+    %'markeredgecolor','none','linewidth',1);
 grid off;
+% uistack(hdx_up,'top');
+% uistack(hdy_up,'top');
 set(gca,'xlim',z*[0*pi 4*pi],'xtick',z*[-2*pi:0.5*pi:4*pi],...
-    'ylim',z*[-1.25*pi 1.5*pi],'ytick',z*[-pi:0.5*pi:pi]);
+    'ylim',z*[-pi 1.5*pi],'ytick',z*[-pi:(pi/3):pi]);
 box on;
 xlabel('step time (CT hours)');
 ylabel('phase shift (CT hours)');
+
+set(fDownNoisy,'units','inches','position',[3 3 3.75 3]);
+set(fUpNoisy,'units','inches','position',[3 3 3.75 3]);
 
 %% add in vitro data
 %label points based on when dusk/dawn hit in ATP/ADP driving (Fig. 2C)
@@ -109,17 +115,30 @@ dawnStep = interp1(z*mean_upPhase, z*mean_upPhaseShift,dawn);
 labels = {'24','6:18','8:16','10:14','12:12','14:10','18:16'};
 
 %%
+% for i=2:numel(dusk)
+%     figure(fDownNoisy);
+%     plot(dusk(i),duskStep(i),'o','markerfacecolor',colors(i-1,:),...
+%         'markersize',4,'markeredgecolor','k','linewidth',0.5);
+%     figure(fUpNoisy);
+%     plot(dawn(i),dawnStep(i),'o','markerfacecolor',colors(i-1,:),...
+%         'markersize',4,'markeredgecolor','k','linewidth',0.5)
+% end
+
 for i=2:numel(dusk)
     figure(fDownNoisy);
-    plot(dusk(i),duskStep(i),'o','markerfacecolor',colors(i-1,:),...
-        'markersize',4,'markeredgecolor','k','linewidth',0.5);
+    z=24/(2*pi); %this z must be in the same units as in the plots above
+    
+    %try arrows
+    arrow([dusk(i) -z*0.7*pi],[dusk(i) -z*0.45*pi],'length',8,...
+        'facecolor',colors(i,:),'edgecolor','k','tipangle',20);
+    hold on;
+    
     figure(fUpNoisy);
-    plot(dawn(i),dawnStep(i),'o','markerfacecolor',colors(i-1,:),...
-        'markersize',4,'markeredgecolor','k','linewidth',0.5)
+    %try arrows
+    arrow([dawn(i) -z*0.7*pi],[dawn(i) -z*0.45*pi],'length',8,...
+        'facecolor',colors(i,:),'edgecolor','k','tipangle',20);
+    hold on;
 end
-
-set(fDownNoisy,'units','inches','position',[0 0 4 2.7]);
-set(fUpNoisy,'units','inches','position',[0 0 4 2.7]);
 
 %% export data into CSV files
 dsUpKaiCP = z*[mean_upPhase' std_upPhase' mean_upPhaseShift' std_upPhaseShift'];
@@ -140,10 +159,14 @@ dsDawn = mat2dataset([inVitroPP(2:end)' dawn(2:end)' dawnStep(2:end)']);
 dsDawn_names = {'day_length', 'dawn_time_CT', 'dawn_phaseshift_CT'};
 dsDawn.Properties.VarNames = dsDawn_names;
 
-export(dsUpKaiCP,'FILE','L_function.csv','Delimiter',',');
-export(dsDownKaiCP,'FILE','D_function.csv','Delimiter',',');
-export(dsDawn,'FILE','dawns.csv','Delimiter',',');
-export(dsDusk,'FILE','dusks.csv','Delimiter',',');
+% export(dsUpKaiCP,'FILE','L_function.csv','Delimiter',',');
+% export(dsDownKaiCP,'FILE','D_function.csv','Delimiter',',');
+% export(dsDawn,'FILE','dawns.csv','Delimiter',',');
+% export(dsDusk,'FILE','dusks.csv','Delimiter',',');
+
+%% export temporarily to .mat files
+% save([getDate('yyyy-mm-dd') '_PKaiCfuns_' getDate('HH.MM.SS') '.mat'],...
+%     'dsUpKaiCP','dsDownKaiCP');
 
 %% export step fun figures
 if TOEXP_STEPFUNS == 1

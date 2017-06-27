@@ -12,9 +12,9 @@ function testParSet_Resampled(PARSET_hiATP, PARSET_loATP, SAMPLE_IND)
 %% load raw data, step times; set normalization/fit parameters
 INDIR = ['saved_data'];
 INFILE = [INDIR '/2017-02-05_stepUpDown_plateReader_forMatlab.xlsx'];
-INSHEETS = {'Sheet6'};
+INSHEETS = {'Sheet6','Sheet7'};
 
-TOSAVE_EXAMPLE_FITFIG = 0; %save figure with fits? (1=yes)
+TOSAVE_EXAMPLE_FITFIG = 1; %save figure with fits? (1=yes)
 
 % script to load plate reader data
 [AllRxns, AllWells, ActTime, PolData] = loadPlateReader(INFILE,INSHEETS);
@@ -55,12 +55,12 @@ hiATPy = [];
 hiATPstep = [];
 [hiATPx, hiATPy, hiATPx_tofit, hiATPy_tofit, hiATPstep, hiATPlabel,...
     hiATPmu, hiATPsigma] = ...
-    gatherToCell(hiATPset, stepUpTime, afterstep, ...
+    gatherToCell_Two(hiATPset, stepUpTime, afterstep, ...
     AllRxns_trim, ActTime_trim, PolData_trim, TONORM);
 
 %untrimmed, but normalized; afterstep=0, TONORM=0 here
 [hiATPx_notr, hiATPy_notr, ~, ~, ~, ~, ~, ~] = ...
-    gatherToCell(hiATPset, stepUpTime, 0, ...
+    gatherToCell_Two(hiATPset, nan(size(stepUpTime)), 0, ...
     AllRxns, ActTime, PolData, 0);
 for r=1:numel(hiATPy_notr)
     hiATPy_notr{r} = 100*(hiATPy_notr{r} - hiATPmu{r})./hiATPsigma{r};
@@ -72,12 +72,12 @@ loATPx = [];
 loATPy = [];
 [loATPx, loATPy, loATPx_tofit, loATPy_tofit, loATPstep, loATPlabel,...
     loATPmu, loATPsigma] = ...
-    gatherToCell(loATPset, stepDownTime, afterstep, ...
+    gatherToCell_Two(loATPset, [nan], afterstep, ... %pass [nan] instead of stepDownTime to keep all of control rxn
     AllRxns_trim, ActTime_trim, PolData_trim, TONORM);
 
 %untrimmed, but normalized; afterstep=0, TONORM=0 here
 [loATPx_notr, loATPy_notr,~, ~, ~, ~, ~, ~] = ...
-    gatherToCell(loATPset, stepDownTime, 0,...
+    gatherToCell_Two(loATPset, nan(size(stepDownTime)), 0,...
     AllRxns, ActTime, PolData, 0);
 for r=1:numel(loATPy_notr)
     loATPy_notr{r} = 100*(loATPy_notr{r} - loATPmu{r})./loATPsigma{r};
@@ -195,12 +195,12 @@ set(fHighATP,'units','inches','position',[0 0 10.5 7]);
 % % suplabel('polarization (norm.)','y');
 % set(floATP,'units','inches','position',[0 0 10.5 7]); 
 % 
-% if TOSAVE_EXAMPLE_FITFIG==1
-%     export_fig([getDate('yyyy-mm-dd') '_stepUp_' getDate() '.pdf'],...
-%         '-cmyk','-painters','-pdf',fHighATP);
-% %     export_fig([getDate('yyyy-mm-dd') '_stepDown_' getDate() '.pdf'],...
-% %         '-cmyk','-painters','-pdf',floATP);
-% end
+if TOSAVE_EXAMPLE_FITFIG==1
+    export_fig([getDate('yyyy-mm-dd') '_stepUp_' getDate() '.pdf'],...
+        '-cmyk','-painters','-pdf',fHighATP);
+%     export_fig([getDate('yyyy-mm-dd') '_stepDown_' getDate() '.pdf'],...
+%         '-cmyk','-painters','-pdf',floATP);
+end
 
 
 

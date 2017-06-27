@@ -1,3 +1,4 @@
+%2017-05-29, EL: revised calculations
 %2017-02-27, EL: modify for second expt
 %2017-02-13, EL: modify to work with plate reader data.
 
@@ -14,9 +15,9 @@ cd(INDIR);
 
 %% enter parameter values
 NUMBOOT = 1; %num. bootstraps
-SAVENAME = 'repeat2_Mar30_test'; %how to name saved files?
-TOSAVESTEPFUNS = 0; %save step functions?
-TOSAVEPARAMS = 0; %save best fit sinusoid parameter sets?
+SAVENAME = 'repeat2_June4anl_fit16plus_linWide'; %how to name saved files?
+TOSAVESTEPFUNS = 1; %save step functions?
+TOSAVEPARAMS = 1; %save best fit sinusoid parameter sets?
 
 %% fit all of the polarization data and return step functions. 
 %use TORESAMPLE=0 in bestFitNonParBoot.m

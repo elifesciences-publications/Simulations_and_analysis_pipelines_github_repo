@@ -1,3 +1,4 @@
+%2017-05-29, EL: revised calculations
 %2017-03-30, EL: generate the L step function from the 05-Feb-2017
 %polarization measurements.
 
@@ -7,7 +8,7 @@ INDIR = ['.'];
 cd(INDIR);
 
 %% enter input parameters here
-SAVENAME = 'Feb_plateReader_Apr1analyze_'; %name to append to savefiles?
+SAVENAME = 'Feb5data_June4anl_fit16plus_linWide'; %name to append to savefiles?
 TOSAVEPARAMS = 1; %save fit parameters? (1=yes)
 TOSAVESTEPFUNS = 1; %save step functions? (1=yes)
 

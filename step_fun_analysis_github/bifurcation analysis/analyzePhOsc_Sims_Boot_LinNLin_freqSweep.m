@@ -1,13 +1,13 @@
-%2017-03-28, EL: Fig. 3---figSup1 
+%2017-03-28, EL: Fig. 3---figSup2 
 %process bifurcation simulation results and make a bifucation diagram
 
 clear all;
-%close all;
+close all;
 clc;
 cd(['.']);
 %% load simulation results
 
-SIMULATION_FILE = load('2017-03-21_06.05.12_freqSweep_fine.mat');
+SIMULATION_FILE = load('2017-06-05_14.01.10_freqSweep_stepFunMixMatch_NonLin_1.mat');
 SIM = SIMULATION_FILE.VAR;
 dawnphase = SIM.dawnphase;
 duskphase = SIM.duskphase;
@@ -49,7 +49,7 @@ ylabel('phase at end of nighttime (rad/2\pi)');
 
 set(gcf,'units','inches','position',[0 0 10 5]);
 %%
-TOEXP_BIFURC = 0;
+TOEXP_BIFURC = 1;
 if TOEXP_BIFURC == 1
     FILENAME = [getDate('yyyy-mm-dd') ...
         '_bifurcSimple_Lin-th0-' num2str(startphase(1)) '_' ...

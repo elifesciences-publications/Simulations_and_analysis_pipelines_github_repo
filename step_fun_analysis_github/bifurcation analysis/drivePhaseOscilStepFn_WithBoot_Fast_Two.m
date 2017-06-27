@@ -24,7 +24,7 @@ if TOTEST==1
     
     STEPFUNTYPE='BOOT';
     INDIR=['../helper functions and shared files/'];
-    INFILE = '2017-04-01_mergedStepFuns_11.35.34.mat';
+    INFILE = '2017-06-05_widefit_mergedStepFuns_11.30.54.mat';
     load([INDIR '/' INFILE]);
     BOOTNUM=1;
     
@@ -48,7 +48,7 @@ end
 TODISP=0; %suppress print output during simulations
 
 %run fast map iteration or explicit simulation?
-TORUN_FAST = 0; %1=fast (preferred), 0=explicit
+TORUN_FAST = 1; %1=fast (preferred), 0=explicit
 
 Tlight = TLIGHT; %upendper (hrs);
 Tdark = TDARK; %upstartper (hrs);
