@@ -15,8 +15,8 @@ INDIR=['.'];
 cd(INDIR);
 
 %export figs?
-toexp_fDiffTau = 0; %(1=yes) simulations for different tau values from same starting phase
-toexp_fDiffPhases = 0; %(1=yes) simulations for same tau value for different starting phases
+toexp_fDiffTau = 1; %(1=yes) simulations for different tau values from same starting phase
+toexp_fDiffPhases = 1; %(1=yes) simulations for same tau value for different starting phases
 
 %% set simulation parameters here
 TDRIVE=24.0; %what driving period?
@@ -128,7 +128,8 @@ for df=1:numel(dutyfrac)
 
 if toexp_fDiffPhases == 1
     export_fig([pwd '/' getDate('yyyy-mm-dd') '_PO_diff-theta0_tau-'... ...
-        num2str(dutyfrac(df)*24) '_' getDate('HH.MM.SS')],...
+        num2str(dutyfrac(df)*24) '_boot' num2str(boot(1)) ...
+        '_' getDate('HH.MM.SS')],...
         '-cmyk','-painters','-pdf',figPhases(df));
 end
 
@@ -174,7 +175,8 @@ for s=1:numel(startphase)
 
 if toexp_fDiffTau == 1
     export_fig([pwd '/' getDate('yyyy-mm-dd') '_PO_diff-taus_theta0-'...
-        num2str(startphase(s)) '_' getDate('HH.MM.SS')],...
+        num2str(startphase(s)) '_boot' num2str(boot(1)) ...
+        '_' getDate('HH.MM.SS')],...
         '-cmyk','-painters','-pdf',figTau(s));
 end
 

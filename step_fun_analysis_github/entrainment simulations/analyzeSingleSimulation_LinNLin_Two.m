@@ -33,13 +33,13 @@ NONLIN_BOOT = ['saved_data/2017-06-05_11.53.10_NonLin_FAST_4.mat'];
 LIN_BOOT = ['saved_data/2017-06-05_11.53.11_Lin_FAST_4.mat'];
 
 %use linear or nonlinear step funs?
-TOPLOT_LIN_NONLIN = 1; %[0=use nonlin step funs sims, 1=use linearized] 
+TOPLOT_LIN_NONLIN = 0; %[0=use nonlin step funs sims, 1=use linearized] 
 
-boot = [2]; %which simulations to do you want to run?
+boot = [1]; %which simulations to do you want to run?
 LO_PP = 4; %which range of photoperiods from the simulations to plot (in hours)
 HI_PP = 18;
-TOEXP_DOUBLEFIG = 1; %save fig?
-TODISP = 1;
+TOEXP_DOUBLEFIG = 0; %save fig?
+TODISP = 0;
 
 %% load in vitro data from entrainment expt. (Fig. 2-figSup2)
 load(['../helper functions and shared files/'...

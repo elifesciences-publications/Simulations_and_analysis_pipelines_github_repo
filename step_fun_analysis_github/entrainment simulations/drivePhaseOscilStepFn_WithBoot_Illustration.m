@@ -1,4 +1,4 @@
-%2017-06-13, EL: Used to make illustrations in Fig. 4A and Fig. MA.
+%2017-06-13, EL: Used to make illustrations in Fig. 4A.
 %Drive a phase oscillator with 'light/dark' cycles according to
 %stepup/stepdown functions (see code re: response to dawn and dusk). Input
 %period of oscillator in light/dark, driving period, fraction of time
@@ -8,10 +8,16 @@
 %   DAWNPHASESHIFT in response to the last dawn. Likewise for DUSK.
 
 function [DAWNPHASE, DAWNPHASESHIFT, DUSKPHASE, DUSKPHASESHIFT] = ...
-    drivePhaseOscilStepFn_WithBoot(TDRIVE, TLIGHT, TDARK, STEPUP, STEPDOWN, ...
+    drivePhaseOscilStepFn_WithBoot_Illustration(TDRIVE, TLIGHT, TDARK, STEPUP, STEPDOWN, ...
     DUTYFRAC, TEND, NUMCYC, STARTPHASE)
 %% TEST
 TOTEST=1;
+
+%make figures?
+TOMAKELDCYCLES_FIG = 1; %make figure?
+TO_EXPORT_LDCYCLES_FIG = 1; %save figure?
+
+%set simulation parameters
 if TOTEST==1
     fname = mfilename('fullpath');
     warning([fname ': Running in test mode!']);
@@ -19,7 +25,8 @@ if TOTEST==1
     INDIR=['../helper functions and shared files'];
     INFILE = '2017-06-05_widefit_mergedStepFuns_11.30.54.mat';
     load([INDIR '/' INFILE]);
-    BOOTNUM=1;
+    
+    BOOTNUM=1; %which of the 4 step functions to use?
     
     TLIGHT=T_hiATP_mix(BOOTNUM);
     TDARK=T_loATP_mix(BOOTNUM);
@@ -28,13 +35,12 @@ if TOTEST==1
     STEPDOWN.phase = down_mix{BOOTNUM}.phase;
     STEPDOWN.phaseShift = down_mix{BOOTNUM}.phaseShift;
     
-    TDRIVE=24.0;
-    
-    %driving params to both
-    DUTYFRAC=[12]/24;
-    NUMCYC=1:5;
+    %set simulation parameters
+    TDRIVE=24.0; %driving period (hrs)
+    DUTYFRAC=[12]/24; %fraction of driving period when lights are on (e.g., 12/24 for 12-hr day)
+    NUMCYC=1:5; %how many cycles to plot
     TEND=TDRIVE*max(NUMCYC)+1;
-    STARTPHASE=0.8;
+    STARTPHASE=0.8; %initial phase of simulation (in units of cyles, between 0 and 1)
 end
 
 %% make phase oscillator predictions using interpolated stepup/down functions
@@ -51,10 +57,6 @@ simtime = TEND; %hrs
 BOOT_STEPFUN = 'getInVitroPhaseShiftBoot';
 stepFun = str2func(BOOT_STEPFUN);
 dispif(TODISP,['Using ' func2str(stepFun) ' in ' mfilename('fullpath') '.']);
-
-%make figures?
-TO_EXPORT_LDCYCLES_FIG = 1;
-TOMAKELDCYCLES_FIG = 1;
 
 %start frpm ph[0]=0 by default
 if isempty(STARTPHASE)

@@ -298,15 +298,14 @@ if TOSAVE_FIT_PARAMS == 1
 end
 
 %% load in vivo data
-fittype='sinusoid';
-warning(['Fittype = ' fittype]);
+fittype='parabolic';
+%disp(['vivo fittype = ' fittype]);
 switch fittype
-    case 'sinusoid'
-        vivoFile = 'in_vivo_entrainment_scaling_June2017.csv';
-        vivocoef = [0.5479    8.0698]; %from 2017-06-26 sinusoid analysis (EL)
     case 'parabolic'
-        vivoFile = 'in_vivo_entrainment_scaling_parab_June2017_rev.csv';
-        vivocoef = [0.5273    8.4990]; %from 2017-06-26 parabolic analysis (EL)
+        vivoFile = ...
+                ['Figures_and_Source_Data/'...
+                 'in_vivo_entrainment_scaling_PARABOLA-26June2017-pk1.csv'];
+        vivocoef = [0.5273    8.4990]; %from 2017-06-27 parabolic analysis (EL)
 end
 
 infile = vivoFile;
@@ -326,32 +325,32 @@ vitroGel = load('2017-03-30_inVitroPP_SDSPAGE.mat');
 SDSPAGE = vitroGel.vitro;
 
 fPkT_Compare = figure();
+plot(SDSPAGE.pp,polyval(SDSPAGE.pkT_lincoef,SDSPAGE.pp),'k-');
+hold on;
 pPKaiC = errorbar(SDSPAGE.pp,SDSPAGE.pkT,SDSPAGE.pkT_Err,...
     's', 'color','k', 'markersize',4,'markerfacecolor','k',...
         'markeredgecolor','none','linewidth',1);
-hold on;
-plot(SDSPAGE.pp,polyval(SDSPAGE.pkT_lincoef,SDSPAGE.pp),'k-');
 
 janCol = [0 255 255]/255;
+plot(combPP(janGoodFit),polyval(jan_pkT_lincoef,combPP(janGoodFit)),...
+    '-','color',janCol);
 pJan=errorbar(combPP(janGoodPlt),pkT(janGoodPlt),pkT_Err(janGoodPlt),...
     's', 'color',janCol, 'markersize',4,'markerfacecolor',janCol,...
         'markeredgecolor','none','linewidth',1);
-plot(combPP(janGoodFit),polyval(jan_pkT_lincoef,combPP(janGoodFit)),...
-    '-','color',janCol);
 
 marCol = [0 200 255]/255;
-pMar=errorbar(combPP(marGoodPlt),pkT(marGoodPlt),pkT_Err(marGoodPlt),...
-    's', 'color', marCol, 'markersize',4,'markerfacecolor',marCol,...
-        'markeredgecolor','none','linewidth',1);
 plot(combPP(marGoodFit),polyval(mar_pkT_lincoef,combPP(marGoodFit)),...
     '-','color',marCol);
+pMar=errorbar(combPP(marGoodPlt),pkT(marGoodPlt),pkT_Err(marGoodPlt),...
+    'o', 'color', marCol, 'markersize',4,'markerfacecolor',marCol,...
+        'markeredgecolor','none','linewidth',1);
 
 %add in vivo
 goodvivo = vivo(:,1) >=8 & vivo(:,1) <= 20;
+plot(vivo(goodvivo,1),polyval(vivocoef,vivo(goodvivo,1)),'r-');
 pVivo=errorbar(vivo(:,1),vivo(:,2),vivo(:,3),...
     's','color','r','markersize',4,'markerfacecolor','r',...
     'markeredgecolor','none','linewidth',1);
-plot(vivo(goodvivo,1),polyval(vivocoef,vivo(goodvivo,1)),'r-');
 
 xlabel('day length \tau (hours)');
 ylabel(['peak time t_{pk}' ' (hours after dawn)']);
@@ -390,4 +389,4 @@ marTable = [3*ones(size(combPP(marGoodPlt)'))  combPP(marGoodPlt)' ...
     dawnPhase(marGoodPlt)' fitPhase_Err(marGoodPlt)];
 dsAll = mat2dataset([janTable; marTable]);
 dsAll.Properties.VarNames = ds_names;
-export(dsAll,'FILE','in_vitro_entrainment_phase_units.csv','Delimiter',',');
+%export(dsAll,'FILE','in_vitro_entrainment_phase_units.csv','Delimiter',',');

@@ -6,7 +6,7 @@ close all;
 clc;
 cd(['.']);
 
-TOSAVE_DATA = 1;
+TOSAVE_DATA = 0;
 
 %% simulation parameters
 TDRIVE=[6:1:48]; %driving periods

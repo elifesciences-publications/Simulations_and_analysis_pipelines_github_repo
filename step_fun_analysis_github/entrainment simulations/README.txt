@@ -1,6 +1,6 @@
  
-Scripts generating Fig. 4 (B-C), Fig. 4-figSup1, Fig. 4-figSup2
-***************************************************************
+Scripts generating Fig. 4, Fig. 4-figSup1, Fig. 4-figSup2
+*********************************************************
 
 To run and analyze entrainment simulations using L and D functions
 ******************************************
@@ -31,3 +31,9 @@ To study which portions of L and D are used in entrainment (Fig. 4-figSup1(B), F
 1. Open analyzeSingleSimulation_LinNLin_Two.m and input the file name containing the step functions you want to study. An example file is provided in 2017-06-05_widefit_mergedStepFuns_11.30.54.mat, as described above. Select which of the 4 step function combinations you want to study by setting the value of boot variable (1-4).
 2. Also enter the file names of the simulation datasets you want to analyze. Examples are provided in saved_data/2017-04-01_16.55.00_NonLin_FAST_4.mat and saved_data/2017-06-05_11.53.11_Lin_FAST_4.mat. It's not recommended to run simulations for more than about a dozen different day lengths or the colored circles on step-up and step-down functions marking entrained responses become overlapping and cluttered.
 3. Select whether you'd like to study the full L and D functions or their linearized versions by setting TOPLOT_LIN_NONLIN = 0 or 1, respectively. 
+
+To make an illustration of phase oscillator entrainment Fig. 4A
+*******************************************************
+1. Open drivePhaseOscilStepFn_WithBoot_Illustration.m.
+2. Set TOTEST=1, TOMAKELDCYCLES_FIG = 1. 
+3. Input simulation parameters and hit run. This will generate the figure.

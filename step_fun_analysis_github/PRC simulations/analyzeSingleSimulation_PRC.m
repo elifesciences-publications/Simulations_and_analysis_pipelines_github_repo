@@ -33,7 +33,7 @@ colors = flipud(colors); %so that later DP = darker colors
 %NOTE! must be in radians. don't normalize by 2*pi
 STEPFUN_BOOT = '../helper functions and shared files/2017-06-05_widefit_mergedStepFuns_11.30.54.mat';
 load([STEPFUN_BOOT]);
-boot = [2]; %which of the bootstraps or combinations of L and D do you want to run?
+boot = [1]; %which of the bootstraps or combinations of L and D do you want to run?
 
 %% run PRC simulations
 for b=boot

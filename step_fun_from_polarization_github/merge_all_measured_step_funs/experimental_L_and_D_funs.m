@@ -316,7 +316,7 @@ end
 dsUp = mat2dataset(dsUp);
 dsUp.Properties.VarNames = {'Rep1_stepTime','Rep1_phaseShift',...
     'Rep2_stepTime','Rep2_phaseShift'};
-export(dsUp,'File','stepUP_polarization.csv','Delimiter',',');
+%export(dsUp,'File','stepUP_polarization.csv','Delimiter',',');
 
 set(gca,'xtick',z*[-6*pi:0.5*pi:6*pi],'xlim',z*([-2*pi 2*pi]+2*pi),...
     'ylim',z*[-pi pi], 'ytick', z*[-2*pi:(1/3)*pi:2*pi]);
@@ -357,7 +357,7 @@ end
 dsDown = mat2dataset(dsDown);
 dsDown.Properties.VarNames = {'Rep1_stepTime','Rep1_phaseShift',...
     'Rep2_stepTime','Rep2_phaseShift'};
-export(dsDown,'File','stepDown_polarization.csv','Delimiter',',');
+%export(dsDown,'File','stepDown_polarization.csv','Delimiter',',');
 
 set(gca,'xtick',z*[-6*pi:0.5*pi:6*pi],'xlim',z*([-2*pi 2*pi]+2*pi),...
     'ylim',z*[-pi pi], 'ytick', z*[-2*pi:(1/3)*pi:2*pi]);
@@ -423,13 +423,13 @@ dsDusk = [pp' z*dusk' z*-0.25*pi*ones(size(dusk'))];
 dsDusk_names = {'day_length','dusk_time_CT', 'dusk_arrow_top_CT'};
 dsDusk = mat2dataset(dsDusk);
 dsDusk.Properties.VarNames = dsDusk_names;
-export(dsDusk,'FILE','dusk_arrows.csv','Delimiter',',');
+%export(dsDusk,'FILE','dusk_arrows.csv','Delimiter',',');
 
 dsDawn = [pp' z*dawn' z*-0.25*pi*ones(size(dusk'))];
 dsDawn_names = {'day_length','dawn_time_CT', 'dawn_arrow_top_CT'};
 dsDawn = mat2dataset(dsDawn);
 dsDawn.Properties.VarNames = dsDawn_names;
-export(dsDawn,'FILE','dawn_arrows.csv','Delimiter',',');
+%export(dsDawn,'FILE','dawn_arrows.csv','Delimiter',',');
 
 %export figures?
 wn = '_widefit';

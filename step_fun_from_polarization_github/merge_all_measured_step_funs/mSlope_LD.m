@@ -2,7 +2,7 @@
 %2017-03-29, EL: generate Fig. 4-figSup3
 %dependencies: export_fig.m from FileExchange for figure export
 
-TOEXP = 1; %export figure? (1=yes)
+TOEXP = 0; %export figure? (1=yes)
 OMR = 0.93457;
 %% compute m = d*(1-L)/(l+d*(1-L)) as a heatmap
 Lrange = [0.0:0.02:1.0];
@@ -14,7 +14,7 @@ Mslope = mslopefun(Lslope,Dslope,OMR);
 Mslope(isinf(Mslope)) = nan;
 Mslope(abs(Mslope) > 2) = nan;
 
-%toss values less than a certain threshold
+%toss values less than 0 (set a certain threshold)
 negLim = -0.00001;
 Mslope(Mslope < negLim) = nan;
 
@@ -37,7 +37,7 @@ dfun = (@(m,L,OMR) (-OMR./(1.0-m)) - (1.0./((L-1.0).*(1.0-m))) + L./(L-1.0));
 lgrid = 0:0.02:0.98;
 d_lo = dfun(0.4,lgrid,OMR);
 d_hi = dfun(0.6,lgrid,OMR);
-d_vivo = dfun(0.55,lgrid,OMR);    %Fig. 2C in vivo curve
+d_vivo = dfun(0.53,lgrid,OMR);    %Fig. 2C in vivo curve
 d_vitro = dfun(0.3762,lgrid,OMR); %Fig. 2C. avg. of fluor. m slopes
 
 %box for our best guesses for l and d
