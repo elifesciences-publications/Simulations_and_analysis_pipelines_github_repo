@@ -1,3 +1,7 @@
+
+This code is associated with the paper from Leypunskiy et al., "The cyanobacterial circadian clock follows midday in vivo and in vitro". eLife, 2017. http://dx.doi.org/10.7554/eLife.23539
+
+
 2017-June-27, Eugene Leypunskiy (leypunskiy@uchicago.edu)
 ******************************
 
